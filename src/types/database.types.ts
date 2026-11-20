@@ -4,6 +4,7 @@
 
 // 1. TIPOS ENUM PERSONALIZADOS
 export type RolUsuario = "enfermero" | "familiar" | "admin";
+export type EstadoUsuario = "pendiente" | "activo" | "suspendido";
 export type EstadoActividad = "pendiente" | "confirmado" | "rechazado";
 export type NivelAlerta = "ok" | "advertencia" | "critico";
 export type EstadoReceta = "activa" | "suspendida" | "finalizada";
@@ -13,8 +14,13 @@ export interface UsuarioRow {
   id_usuario: number;
   nombre: string;
   correo: string;
-  contrasena: string;
+  /** Hash bcrypt. NULL para cuentas pendientes de activación por invitación. */
+  contrasena: string | null;
   rol: RolUsuario;
+  estado: EstadoUsuario;
+  token_version: number;
+  created_at: Date | string;
+  updated_at: Date | string;
 }
 
 // 3. TABLA: familiares
@@ -128,5 +134,17 @@ export interface SignoVitalRow {
   saturacion: number | null;
   glucosa: number | null;
   fecha: Date | string;
+}
+
+// 13. TABLA: residentes_familiares (relación N:M — migración 001)
+export interface ResidenteFamiliarRow {
+  id_vinculo: number;
+  id_residente: number;
+  id_familiar: number;
+  parentesco: string;
+  es_tutor_legal: boolean;
+  contacto_emergencia: boolean;
+  notas: string | null;
+  created_at: Date | string;
 }
 
