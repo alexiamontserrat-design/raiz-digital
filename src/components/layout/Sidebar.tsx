@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from "next/image";
@@ -8,11 +9,21 @@ import {
   PanelLeftOpen,
   X,
 } from "lucide-react";
+import { signOut } from "next-auth/react";
 import { SidebarNav } from "./SidebarNav";
 import { useSidebar } from "./SidebarContext";
 
 export function Sidebar() {
-  const { isCollapsed, isMobileOpen, toggleCollapse, closeMobile } = useSidebar();
+  const {
+    isCollapsed,
+    isMobileOpen,
+    toggleCollapse,
+    closeMobile,
+  } = useSidebar();
+
+  const handleLogout = async () => {
+    await signOut({ callbackUrl: "/login" });
+  };
 
   return (
     <>
@@ -25,9 +36,8 @@ export function Sidebar() {
 
       <aside
         id="app-sidebar"
-        className={`sidebar ${isCollapsed ? "collapsed" : ""} ${
-          isMobileOpen ? "mobile-open" : ""
-        }`}
+        className={`sidebar ${isCollapsed ? "collapsed" : ""} ${isMobileOpen ? "mobile-open" : ""
+          }`}
         aria-label="Navegación principal"
       >
         <div className="sidebar-header">
@@ -59,7 +69,10 @@ export function Sidebar() {
                   className="brand-logo"
                 />
               </div>
-              <span className="brand-fallback-mark" aria-hidden="true">
+              <span
+                className="brand-fallback-mark"
+                aria-hidden="true"
+              >
                 RD
               </span>
             </Link>
@@ -96,25 +109,32 @@ export function Sidebar() {
           <SidebarNav />
         </div>
 
-        {/* Sección inferior anclada fija (nunca se desplaza ni se oculta por contenido) */}
+        {/* Sección inferior anclada fija */}
         <div className="sidebar-bottom">
-          <div className="sidebar-divider" aria-hidden="true" />
+          <div
+            className="sidebar-divider"
+            aria-hidden="true"
+          />
+
           <button
             type="button"
             className="nav-item nav-item-logout"
-            disabled
-            aria-disabled="true"
-            title="El cierre de sesión estará disponible cuando se integre la autenticación."
+            onClick={handleLogout}
+            title="Cerrar sesión"
           >
-            <span className="nav-icon" aria-hidden="true">
+            <span
+              className="nav-icon"
+              aria-hidden="true"
+            >
               <LogOut size={22} strokeWidth={2} />
             </span>
-            <span className="nav-label">Cerrar sesión</span>
+
+            <span className="nav-label">
+              Cerrar sesión
+            </span>
           </button>
         </div>
       </aside>
     </>
   );
 }
-
-
